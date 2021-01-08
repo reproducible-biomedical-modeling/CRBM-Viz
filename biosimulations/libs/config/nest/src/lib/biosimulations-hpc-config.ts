@@ -10,15 +10,7 @@ export default registerAs('hpc', () => {
       username: process.env.HPC_SSH_USERNAME,
       privateKey: process.env.HPC_SSH_PRIVATE_KEY,
     },
-
-    // Follows format from SSHConnectionConfig
-    sftp: {
-      host: process.env.HPC_SFTP_HOST,
-      port: process.env.HPC_SFTP_PORT,
-      username: process.env.HPC_SFTP_USERNAME,
-      privateKey: process.env.HPC_SFTP_PRIVATE_KEY,
-    },
-
+    homeDir: process.env.HPC_HOME_DIR || "/home/FCAM/crbmapi",
     fileStorage: process.env.FILE_STORAGE,
     hpcBaseDir: process.env.HPC_BASE_DIR,
   };

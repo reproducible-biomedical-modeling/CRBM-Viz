@@ -4,8 +4,8 @@ import { ClientProxy } from '@nestjs/microservices';
 import { SimulationRunStatus } from '@biosimulations/dispatch/api-models';
 import { ConfigService } from '@nestjs/config';
 import { SbatchService } from '../sbatch/sbatch.service';
-import { urls } from '@biosimulations/config/common';
 
+// TODO This service relies on knowledge of the sbatch script, and both use the same config vars. Should be refactored, or merged with sbatch service
 @Injectable()
 export class HpcService {
   private logger = new Logger(HpcService.name);
@@ -31,7 +31,7 @@ export class HpcService {
     stdout: string;
     stderr: string;
   }> {
-    const simulatorString = `biosimulations_${simulator}_${version}.img`;
+    const simulatorString = `docker://ghcr.io/biosimulators/${simulator}:${version}`;
     const simDirBase = `${this.configService.get('hpc.hpcBaseDir')}/${id}`;
 
     const endpoint = this.configService.get('urls.dispatchApi')
@@ -43,9 +43,15 @@ export class HpcService {
       endpoint,
       id
     );
-    return this.sshService.execStringCommand(
-      `mkdir -p ${simDirBase}/in && mkdir -p ${simDirBase}/out && echo "${sbatchString}" > ${simDirBase}/in/${id}.sbatch && chmod +x ${simDirBase}/in/${id}.sbatch && sbatch ${simDirBase}/in/${id}.sbatch`
-    );
+
+    const command = `mkdir -p ${simDirBase}/in && mkdir -p ${simDirBase}/out && echo "${sbatchString}" > ${simDirBase}/in/${id}.sbatch && chmod +x ${simDirBase}/in/${id}.sbatch && sbatch ${simDirBase}/in/${id}.sbatch`
+
+    const res = this.sshService.execStringCommand(command)
+
+    return res.catch(err => {
+      console.error("Job Submission Failed")
+      return { stdout: "", stderr: "Failed to submit job" + err }
+    });
   }
 
   async getJobStatus(jobId: string): Promise<SimulationRunStatus> {

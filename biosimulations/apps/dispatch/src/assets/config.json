@@ -1,6 +1,10 @@
 {
     "appName": "runBioSimulations",
-    "appNameParts": ["run", "Bio", "Simulations"],
+    "appNameParts": [
+        "run",
+        "Bio",
+        "Simulations"
+    ],
     "logo": "assets/images/runbiosimulations-logo/logo.svg",
     "banner": "assets/images/runbiosimulations-logo/logo-white.svg",
     "appUrl": "https://run.biosimulations.org/",
@@ -22,6 +26,12 @@
     "simulatorsNewIssueUrl": "https://github.com/biosimulators/Biosimulators/issues/new/choose",
     "simulatorsNewPullUrl": "https://github.com/biosimulators/Biosimulators/compare",
     "appConfig": {
-        "simulationStatusRefreshIntervalSec": 5
+        "simulationStatusRefreshIntervalSec": 5,
+        "exampleCombineArchives": {
+            "repoOwnerName": "biosimulators/Biosimulators_test_suite",
+            "repoRef": "deploy",
+            "repoPath": "examples/",
+            "examplePath": "sbml-core/Vilar-PNAS-2002-minimal-circardian-clock.omex"
+        }
     }
 }
