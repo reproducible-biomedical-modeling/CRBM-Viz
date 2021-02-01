@@ -265,3 +265,4 @@ $mat-warn: (
 $theme-warn: mat-palette($mat-warn, main, lighter, darker);
 $theme: mat-light-theme($theme-primary, $theme-accent, $theme-warn);
 $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
+$foreground: map-get($theme, foreground);

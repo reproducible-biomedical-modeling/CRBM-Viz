@@ -1,61 +1,68 @@
 @import 'biosimulations-colors';
+@mixin view-logs-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $primary: map-get($config, primary);
+  $accent: map-get($config, accent);
+  $warn: map-get($config, warn);
+  $background: map-get($config, background);
+  $foreground: map-get($config, foreground);
+  biosimulations-text-page-side-bar-section ::ng-deep {
+    .mat-icon-button {
+      white-space: normal;
+      font-weight: normal;
+      text-align: left;
+      text-indent: -1.25rem;
+      margin-left: 1.25rem;
 
-biosimulations-text-page-side-bar-section ::ng-deep {
-  .mat-icon-button {
-    white-space: normal;
-    font-weight: normal;
-    text-align: left;
-    text-indent: -1.25rem;
-    margin-left: 1.25rem;
+      biosimulations-icon {
+        position: relative;
+        top: -3px;
+      }
 
-    biosimulations-icon {
-      position: relative;
-      top: -3px;
-    }
+      &:hover {
+        color: mat-color($primary);
+      }
 
-    &:hover {
-      color: mat-color($theme-primary);
-    }
+      &:active {
+        color: mat-color($primary, darker);
+      }
 
-    &:active {
-      color: mat-color($theme-primary, darker);
-    }
-
-    &.mat-button-disabled {
-      pointer-events: none;
+      &.mat-button-disabled {
+        pointer-events: none;
+      }
     }
   }
-}
 
-h2 {
-  color: $dark-primary-text;
-  background: $light-bg-darker-10;
-
-  margin-block-start: 0;
-  margin-block-end: 0;
-  margin-bottom: 0.5rem;
-
-  padding: 0 0.5rem;
-  border-radius: 4px;
-
-  &:not(:first-child) {
-    margin-top: 2rem;
-  }
-}
-
-@media screen and (max-width: 959px) {
   h2 {
+    color: mat-color($foreground, text);
+    background: mat-color($background, disabled-button-toggle);
+
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-bottom: 0.5rem;
+
+    padding: 0 0.5rem;
+    border-radius: 4px;
+
     &:not(:first-child) {
-      margin-top: 1rem;
+      margin-top: 2rem;
     }
   }
-}
 
-biosimulations-raw-simulation-log,
-biosimulations-structured-simulation-log-element {
-  ::ng-deep {
-    pre.stdout {
-      max-height: 600px;
+  @media screen and (max-width: 959px) {
+    h2 {
+      &:not(:first-child) {
+        margin-top: 1rem;
+      }
+    }
+  }
+
+  biosimulations-raw-simulation-log,
+  biosimulations-structured-simulation-log-element {
+    ::ng-deep {
+      pre.stdout {
+        max-height: 600px;
+      }
     }
   }
 }

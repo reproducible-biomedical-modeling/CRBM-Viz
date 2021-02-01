@@ -1,6 +1,175 @@
 @import 'biosimulations-colors';
 @import 'biosimulations-typography';
+@mixin global($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $primary: map-get($config, primary);
+  $accent: map-get($config, accent);
+  $warn: map-get($config, warn);
+  $background: map-get($config, background);
+  $foreground: map-get($config, foreground);
 
+  /* status colors */
+  .status-label {
+    &.CREATED,
+    &.QUEUED {
+      color: mat-color($foreground, text);
+    }
+
+    &.RUNNING,
+    &.PROCESSING {
+      color: mat-color($theme-tertiary);
+    }
+
+    &.SUCCEEDED {
+      color: mat-color($theme-tertiary);
+    }
+
+    &.SKIPPED {
+      color: mat-color($theme-accent);
+    }
+
+    &.FAILED {
+      color: mat-color($theme-warn);
+    }
+  }
+
+  a.status-label {
+    &.CREATED,
+    &.QUEUED {
+      &:hover {
+        color: darken(mat-color($theme-primary), 10%);
+      }
+      &:active {
+        color: darken(mat-color($theme-primary), 20%);
+      }
+    }
+
+    &.RUNNING,
+    &.PROCESSING {
+      &:hover {
+        color: darken(mat-color($theme-tertiary), 8%);
+      }
+      &:active {
+        color: darken(mat-color($theme-tertiary), 16%);
+      }
+    }
+
+    &.SUCCEEDED {
+      &:hover {
+        color: darken(mat-color($theme-warn), 30%);
+      }
+      &:active {
+        color: darken(#333333, 30%);
+      }
+    }
+
+    &.SKIPPED {
+      &:hover {
+        color: darken(mat-color($theme-accent), 7%);
+      }
+      &:active {
+        color: darken(mat-color($theme-accent), 14%);
+      }
+    }
+
+    &.FAILED {
+      &:hover {
+        color: darken(mat-color($theme-warn), 15%);
+      }
+      &:active {
+        color: darken(mat-color($theme-warn), 30%);
+      }
+    }
+  }
+
+  .status-section {
+    &.CREATED,
+    &.QUEUED,
+    &.Warned {
+      h2 {
+        color: mat-color($theme-primary);
+        background: $theme-primary-lightest;
+
+        .mat-icon-button.biosimulations-icon-button {
+          &:hover {
+            color: darken(mat-color($theme-primary), 10%) !important;
+          }
+          &:active {
+            color: darken(mat-color($theme-primary), 20%) !important;
+          }
+        }
+      }
+    }
+
+    &.RUNNING,
+    &.PROCESSING,
+    &.Passed {
+      h2 {
+        color: mat-color($theme-tertiary);
+        background: $theme-tertiary-lightest;
+
+        .mat-icon-button.biosimulations-icon-button {
+          &:hover {
+            color: darken(mat-color($theme-tertiary), 8%) !important;
+          }
+          &:active {
+            color: darken(mat-color($theme-tertiary), 16%) !important;
+          }
+        }
+      }
+    }
+
+    &.SUCCEEDED,
+    &.Skipped {
+      h2 {
+        color: $dark-primary-text;
+        background: $light-bg-darker-10;
+
+        .mat-icon-button.biosimulations-icon-button {
+          &:hover {
+            color: darken(#333333, 15%) !important;
+          }
+          &:active {
+            color: darken(#333333, 30%) !important;
+          }
+        }
+      }
+    }
+
+    &.SKIPPED {
+      h2 {
+        color: mat-color($theme-accent);
+        background: $theme-accent-lightest;
+
+        .mat-icon-button.biosimulations-icon-button {
+          &:hover {
+            color: darken(mat-color($theme-accent), 7%) !important;
+          }
+          &:active {
+            color: darken(mat-color($theme-accent), 14%) !important;
+          }
+        }
+      }
+    }
+
+    &.FAILED,
+    &.Failed {
+      h2 {
+        color: mat-color($theme-warn);
+        background: $theme-warn-lightest;
+
+        .mat-icon-button.biosimulations-icon-button {
+          &:hover {
+            color: darken(mat-color($theme-warn), 15%) !important;
+          }
+          &:active {
+            color: darken(mat-color($theme-warn), 30%) !important;
+          }
+        }
+      }
+    }
+  }
+}
 html {
   height: 100%;
   scroll-behavior: smooth;
@@ -638,167 +807,5 @@ table {
 .ragged-columns {
   .column {
     height: max-content;
-  }
-}
-
-/* status colors */
-.status-label {
-  &.CREATED,
-  &.QUEUED {
-    color: mat-color($theme-primary);
-  }
-
-  &.RUNNING,
-  &.PROCESSING {
-    color: mat-color($theme-tertiary);
-  }
-
-  &.SUCCEEDED {
-    color: $dark-primary-text;
-  }
-
-  &.SKIPPED {
-    color: mat-color($theme-accent);
-  }
-
-  &.FAILED {
-    color: mat-color($theme-warn);
-  }
-}
-
-a.status-label {
-  &.CREATED,
-  &.QUEUED {
-    &:hover {
-      color: darken(mat-color($theme-primary), 10%);
-    }
-    &:active {
-      color: darken(mat-color($theme-primary), 20%);
-    }
-  }
-
-  &.RUNNING,
-  &.PROCESSING {
-    &:hover {
-      color: darken(mat-color($theme-tertiary), 8%);
-    }
-    &:active {
-      color: darken(mat-color($theme-tertiary), 16%);
-    }
-  }
-
-  &.SUCCEEDED {
-    &:hover {
-      color: darken(#333333, 15%);
-    }
-    &:active {
-      color: darken(#333333, 30%);
-    }
-  }
-
-  &.SKIPPED {
-    &:hover {
-      color: darken(mat-color($theme-accent), 7%);
-    }
-    &:active {
-      color: darken(mat-color($theme-accent), 14%);
-    }
-  }
-
-  &.FAILED {
-    &:hover {
-      color: darken(mat-color($theme-warn), 15%);
-    }
-    &:active {
-      color: darken(mat-color($theme-warn), 30%);
-    }
-  }
-}
-
-.status-section {
-  &.CREATED,
-  &.QUEUED,
-  &.Warned {
-    h2 {
-      color: mat-color($theme-primary);
-      background: $theme-primary-lightest;
-
-      .mat-icon-button.biosimulations-icon-button {
-        &:hover {
-          color: darken(mat-color($theme-primary), 10%) !important;
-        }
-        &:active {
-          color: darken(mat-color($theme-primary), 20%) !important;
-        }
-      }
-    }
-  }
-
-  &.RUNNING,
-  &.PROCESSING,
-  &.Passed {
-    h2 {
-      color: mat-color($theme-tertiary);
-      background: $theme-tertiary-lightest;
-
-      .mat-icon-button.biosimulations-icon-button {
-        &:hover {
-          color: darken(mat-color($theme-tertiary), 8%) !important;
-        }
-        &:active {
-          color: darken(mat-color($theme-tertiary), 16%) !important;
-        }
-      }
-    }
-  }
-
-  &.SUCCEEDED,
-  &.Skipped {
-    h2 {
-      color: $dark-primary-text;
-      background: $light-bg-darker-10;
-
-      .mat-icon-button.biosimulations-icon-button {
-        &:hover {
-          color: darken(#333333, 15%) !important;
-        }
-        &:active {
-          color: darken(#333333, 30%) !important;
-        }
-      }
-    }
-  }
-
-  &.SKIPPED {
-    h2 {
-      color: mat-color($theme-accent);
-      background: $theme-accent-lightest;
-
-      .mat-icon-button.biosimulations-icon-button {
-        &:hover {
-          color: darken(mat-color($theme-accent), 7%) !important;
-        }
-        &:active {
-          color: darken(mat-color($theme-accent), 14%) !important;
-        }
-      }
-    }
-  }
-
-  &.FAILED,
-  &.Failed {
-    h2 {
-      color: mat-color($theme-warn);
-      background: $theme-warn-lightest;
-
-      .mat-icon-button.biosimulations-icon-button {
-        &:hover {
-          color: darken(mat-color($theme-warn), 15%) !important;
-        }
-        &:active {
-          color: darken(mat-color($theme-warn), 30%) !important;
-        }
-      }
-    }
   }
 }
