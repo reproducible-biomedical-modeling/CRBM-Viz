@@ -1,12 +1,13 @@
 import { Test } from '@nestjs/testing';
 import { AuthClientService } from './auth-client.service';
-import { HttpModule, HttpService } from '@nestjs/common';
+import { HttpModule } from '@nestjs/common';
+import { AuthenticationClient, TokenResponse } from 'auth0';
 import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
-import { AxiosResponse } from 'axios';
+
 describe('AuthClientService', () => {
   let service: AuthClientService;
-  let httpService: HttpService;
+  let authClient: AuthenticationClient;
   const MockConfigSerivce = {
     get: (key: string, def: any) => {
       return {
@@ -17,7 +18,15 @@ describe('AuthClientService', () => {
       };
     },
   };
-
+  const mockClient = {
+    clientCredentialsGrant: (audience: string) => {
+      return of({
+        access_token: 'test_acces_token',
+        token_type: 'client_credentials',
+        expires_in: 100,
+      }).toPromise();
+    },
+  };
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       imports: [HttpModule],
@@ -27,8 +36,11 @@ describe('AuthClientService', () => {
       ],
     }).compile();
 
-    httpService = module.get<HttpService>(HttpService);
     service = module.get(AuthClientService);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    service.authClient = mockClient;
   });
 
   it('should be defined', () => {
@@ -48,65 +60,49 @@ describe('AuthClientService', () => {
       MockConfigSerivce.get('', '').api_audience,
     );
   });
-  it('should call client_credentials Endpoint', async () => {
-    const result: AxiosResponse = {
-      data: {
-        access_token: 'test_token',
-      },
-      status: 200,
-      statusText: '',
-      headers: {},
-      config: {},
+  it('should call client_credentials method', async () => {
+    const result: TokenResponse = {
+      access_token: 'test_acces_token',
+      token_type: 'client_credentials',
+      expires_in: 100,
     };
     const spy = jest
-      .spyOn(httpService, 'post')
-      .mockImplementationOnce(() => of(result));
+      .spyOn(mockClient, 'clientCredentialsGrant')
+      .mockImplementationOnce(() => of(result).toPromise());
     const token = await service.getToken();
-    expect(token).toBe(result.data.access_token);
+    expect(token).toBe(result.access_token);
     expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith('domain/oauth/token', {
+    expect(spy).toHaveBeenCalledWith({
       audience: MockConfigSerivce.get('', '').api_audience,
-      client_id: MockConfigSerivce.get('', '').client_id,
-      client_secret: MockConfigSerivce.get('', '').client_secret,
-      grant_type: 'client_credentials',
     });
   });
   it('should override auidence', async () => {
-    const result: AxiosResponse = {
-      data: {
-        access_token: 'test_token',
-      },
-      status: 200,
-      statusText: '',
-      headers: {},
-      config: {},
+    const result: TokenResponse = {
+      access_token: 'test_acces_token',
+      token_type: 'client_credentials',
+      expires_in: 100,
     };
     const spy = jest
-      .spyOn(httpService, 'post')
-      .mockImplementationOnce(() => of(result));
+      .spyOn(mockClient, 'clientCredentialsGrant')
+      .mockImplementationOnce(() => of(result).toPromise());
     const testAudience = 'testAPIAudience';
     const token = await service.getToken(testAudience);
     expect(token).toBeTruthy();
-    expect(spy).toHaveBeenCalledWith('domain/oauth/token', {
+    expect(spy).toHaveBeenCalledWith({
       audience: testAudience,
-      client_id: MockConfigSerivce.get('', '').client_id,
-      client_secret: MockConfigSerivce.get('', '').client_secret,
-      grant_type: 'client_credentials',
     });
   });
   it('should return token', async () => {
-    const result: AxiosResponse = {
-      data: {
-        access_token: 'test_token',
-      },
-      status: 200,
-      statusText: '',
-      headers: {},
-      config: {},
+    const result: TokenResponse = {
+      access_token: 'test_access_token',
+      token_type: 'client_credentials',
+      expires_in: 100,
     };
-    jest.spyOn(httpService, 'post').mockImplementationOnce(() => of(result));
+    const spy = jest
+      .spyOn(mockClient, 'clientCredentialsGrant')
+      .mockImplementationOnce(() => of(result).toPromise());
     const token = await service.getToken();
 
-    expect(token).toBe(result.data.access_token);
+    expect(token).toBe(result.access_token);
   });
 });

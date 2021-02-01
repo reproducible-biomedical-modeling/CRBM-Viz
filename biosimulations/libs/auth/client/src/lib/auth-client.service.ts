@@ -1,6 +1,6 @@
 import { Logger, HttpService, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CreateClientGrant, TokenResponse, AuthenticationClient } from 'auth0';
+import { TokenResponse, AuthenticationClient } from 'auth0';
 @Injectable({})
 export class AuthClientService {
   private authConfig: any = this.configService.get('auth', {});
