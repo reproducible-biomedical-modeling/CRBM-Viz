@@ -1,6 +1,6 @@
 import { Logger, HttpService, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
+import { CreateClientGrant, TokenResponse, AuthenticationClient } from 'auth0';
 @Injectable({})
 export class AuthClientService {
   private authConfig: any = this.configService.get('auth', {});
@@ -9,7 +9,8 @@ export class AuthClientService {
   private api_audience: string;
   private client_secret: string;
   private auth0_domain: string;
-  constructor(
+  private authClient: AuthenticationClient;
+  public constructor(
     private http: HttpService,
     private readonly configService: ConfigService,
   ) {
@@ -17,19 +18,27 @@ export class AuthClientService {
     this.client_id = this.authConfig.client_id;
     this.api_audience = this.authConfig.api_audience;
     this.client_secret = this.authConfig.client_secret;
+    this.authClient = new AuthenticationClient({
+      clientId: this.client_id,
+      domain: this.auth0_domain,
+      clientSecret: this.client_secret,
+    });
   }
+
   public async getToken(audience = this.api_audience): Promise<string> {
     this.logger.debug(
       `Getting auth token for audience ${this.api_audience} for client ${this.client_id}`,
     );
-    const res: any = await this.http
-      .post(`${this.auth0_domain}oauth/token`, {
-        client_id: this.client_id,
-        client_secret: this.client_secret,
+
+    const token: TokenResponse = await this.authClient
+      .clientCredentialsGrant({
         audience: audience,
-        grant_type: 'client_credentials',
       })
-      .toPromise();
-    return res.data.access_token;
+      .catch((err) => {
+        this.logger.error(err);
+        throw err;
+      });
+
+    return token.access_token;
   }
 }
