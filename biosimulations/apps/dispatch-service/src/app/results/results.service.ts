@@ -48,7 +48,7 @@ export class ResultsService {
     csvFileList.forEach((file: resultFile) => {
       resultPromises.push(this.uploadResultFile(id, file, transpose));
     });
-    Promise.all(resultPromises).then((_) => {
+    return Promise.all(resultPromises).then((_) => {
       const data: DispatchProcessedPayload = {
         _message: DispatchMessage.processed,
         id: id,
